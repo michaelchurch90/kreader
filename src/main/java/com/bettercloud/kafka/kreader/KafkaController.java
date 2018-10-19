@@ -15,7 +15,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.kafka.receiver.KafkaReceiver;
 import reactor.kafka.receiver.ReceiverOptions;
-import reactor.kafka.receiver.ReceiverRecord;
 
 import java.time.Duration;
 import java.util.Collections;
@@ -25,6 +24,7 @@ import java.util.Map;
 @RestController
 public class KafkaController {
 
+    private static final Duration READ_TIMEOUT = Duration.ofSeconds(5);
     private final String bootstrapServers;
     private final String schemaRegistryUrl;
 
@@ -51,13 +51,12 @@ public class KafkaController {
         return KafkaReceiver.create(recieverOptions)
                 .receive()
                 .doOnNext(System.out::println)
-                .take(2)
                 .map(ConsumerRecord::value)
                 .map(Object::toString)
-                .take(1)
-//                .then(Mono.just(new RecordPage(topic, partition, 123, Collections.emptyList())));
+                .take(maxRecords)
+                .take(READ_TIMEOUT)
                 .collectList()
-                .map(records -> new RecordPage(topic, partition, 321L, records));
-//                .doOnError(e -> System.err.println(e.toString()));
+                .map(records -> new RecordPage(topic, partition, 321L, records))
+                .doOnError(e -> System.err.println(e.toString()));
     }
 }
