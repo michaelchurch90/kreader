@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @RestController
@@ -57,6 +58,7 @@ public class KafkaController {
             return Mono.just(ResponseEntity.badRequest().body("Query param 'size' must be less than " + 10000));
 
         Object deserializer = KafkaAvroDeserializer.class;
+        Pattern pattern = Pattern.compile(filter, Pattern.DOTALL);
 
         if (serialization.equals(STRING_DESERIALIZAER))
             deserializer = StringDeserializer.class;
@@ -74,7 +76,7 @@ public class KafkaController {
 
         return KafkaReceiver.create(receiverOptions)
                 .receive()
-                .filter(record -> record.toString().contains(filter))
+                .filter(record -> pattern.matcher(record.toString()).find())
                 .filter(record -> record.timestamp() < before && record.timestamp() > after)
                 .take(size)
                 .take(READ_TIMEOUT)
