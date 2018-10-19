@@ -4,17 +4,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Record {
     @JsonProperty
-    private final String topic;
-    @JsonProperty
-    private final int partition;
+    private String key;
     @JsonProperty
     private final long offset;
     @JsonProperty
     private final Object value;
 
-    public Record(String topic, int partition, long offset, Object value) {
-        this.topic = topic;
-        this.partition = partition;
+    public Record(String key, long offset, Object value) {
         this.offset = offset;
         this.value = value;
     }
