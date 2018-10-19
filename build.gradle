@@ -4,6 +4,7 @@ buildscript {
 	}
 	repositories {
 		mavenCentral()
+		maven { url 'http://packages.confluent.io/maven/' }
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -21,11 +22,12 @@ sourceCompatibility = 1.8
 
 repositories {
 	mavenCentral()
+	maven { url 'http://packages.confluent.io/maven/' }
 }
 
 
 dependencies {
-//	compile ("io.confluent:kafka-avro-serializer:3.3.1")
+	compile ("io.confluent:kafka-avro-serializer:3.3.1")
 	implementation('org.springframework.boot:spring-boot-starter-webflux')
 	compile "io.projectreactor.kafka:reactor-kafka"
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
