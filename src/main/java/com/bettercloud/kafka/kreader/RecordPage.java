@@ -1,6 +1,7 @@
 package com.bettercloud.kafka.kreader;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 
 import java.util.List;
 
@@ -12,9 +13,9 @@ public class RecordPage {
     @JsonProperty
     private long nextOffset;
     @JsonProperty
-    private List<? extends Object> records;
+    private List<Record> records;
 
-    public RecordPage(String topic, int partition, long nextOffset, List<? extends Object> records) {
+    public RecordPage(String topic, int partition, long nextOffset, List<Record> records) {
         this.topic = topic;
         this.partition = partition;
         this.nextOffset = nextOffset;
